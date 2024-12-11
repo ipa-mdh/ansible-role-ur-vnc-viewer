@@ -1,0 +1,35 @@
+---
+# tasks file for install_tigervnc
+- name: Install TigerVNC
+  become: true
+  ansible.builtin.apt:
+    update_cache: true
+    pkg:
+     - tigervnc-viewer
+
+- name: Create desktop file
+  ansible.builtin.blockinfile:
+    block: |
+      [Desktop Entry]
+      Version=1.0
+      Name=UR VNC
+      Keywords=IPA;Fraunhofer;ProcessIt;ROS;VNC;UR
+      Terminal=false
+      Type=Application
+      StartupNotify=true
+      Icon= {{HOME}}/.local/share/pixmaps/UR_VNC.png
+      Categories=Science;
+      Exec=vncviewer -PasswordFile {{HOME}}/.vnc/passwd {{HOME}}/.vnc/ur.tigervnc
+    create: true
+    path: "~/.local/share/applications/tigervnc.desktop"
+  
+- name: Copy icon
+  ansible.builtin.copy:
+    dest: "~/.local/share/pixmaps"
+    src: "{{role_path}}/files/UR_VNC.png"
+
+
+- name: Update database of desktop entries
+  ansible.builtin.command:
+    cmd: "update-desktop-database ~/.local/share/applications"
+

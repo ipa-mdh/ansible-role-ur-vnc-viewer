@@ -1,0 +1,4 @@
+---
+# defaults file for install_tigervnc
+HOME: "{{ansible_facts['env']['HOME']}}"
+tmp_path: "/tmp"
